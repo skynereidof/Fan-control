@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Fan control
+Comment=Kontrola wentylatorów
+Exec=python3 /usr/share/fancontrol/fan.py
+Icon=/usr/share/fancontrol/fan.png
+Terminal=false
+Categories=Utility;
