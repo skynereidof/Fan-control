@@ -1,6 +1,37 @@
 import os
+import sys
 import tkinter as tk
 from tkinter import ttk
+import subprocess
+
+def check_root():
+    """Sprawdza, czy skrypt został uruchomiony z uprawnieniami roota."""
+    if os.geteuid() != 0:
+        # Użyj zenity do wyświetlenia okna dialogowego z prośbą o hasło
+        password = subprocess.run(
+            ["zenity", "--entry", "--hide-text", "--title=Uprawnienia administratora", "--text=Wprowadź hasło:"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True
+        ).stdout.strip()
+
+        if password:
+            # Uruchom skrypt z uprawnieniami roota za pomocą sudo
+            command = f"echo {password} | sudo -S python3 {sys.argv[0]}"
+            try:
+                subprocess.run(command, shell=True, check=True)
+            except subprocess.CalledProcessError:
+                subprocess.run(["zenity", "--error", "--text=Nieprawidłowe hasło lub błąd podczas uruchamiania."])
+            sys.exit(0)
+        else:
+            subprocess.run(["zenity", "--error", "--text=Hasło jest wymagane do uruchomienia programu."])
+            sys.exit(1)
+
+# Sprawdź uprawnienia przed wykonaniem reszty skryptu
+check_root()
+
+# Reszta skryptu
+print("Program działa z uprawnieniami roota!")
 
 # Ścieżki do plików PWM i temperatury CPU
 PWM1_PATH = "/sys/class/hwmon/hwmon7/pwm1"
