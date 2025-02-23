@@ -3,6 +3,8 @@ import sys
 import tkinter as tk
 from tkinter import ttk
 import subprocess
+root = tk.Tk()
+root.withdraw()
 
 def check_root():
     """Sprawdza, czy skrypt został uruchomiony z uprawnieniami roota."""
@@ -139,6 +141,16 @@ def toggle_mode():
         mode_button.config(text="Tryb: Ręczny")
         pwm1_slider.config(state="normal")
         pwm2_slider.config(state="normal")
+
+def initialize_sliders():
+    """ Ustawia suwaki na odpowiednie wartości przy starcie programu """
+    root.after(100, lambda: pwm1_slider.set(33))
+    root.after(100, lambda: pwm2_slider.set(42))
+    root.after(200, lambda: pwm1_value_label.config(text="33%"))
+    root.after(200, lambda: pwm2_value_label.config(text="42%"))
+
+# Wywołanie funkcji inicjalizującej suwaki
+initialize_sliders()
 
 # Tworzenie głównego okna aplikacji
 root = tk.Tk()
